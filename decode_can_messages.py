@@ -141,7 +141,9 @@ if __name__ == "__main__":
                 process_cantrc_data(line)
 
     
-    # Message slot 
+    # We need to collect multiple CAN messages and pin it to the same timestamp
+    # For ex : 0x18,0x28C,0x30,0x48 --> Signals from these messages will have same timestamp
+    # message_slot is the list of frame_ids whose msg we want to club together
     message_slot = list(g_can_messages.keys())
     first_frame = True
     index = 0
@@ -157,18 +159,22 @@ if __name__ == "__main__":
 
         if frame_id in g_can_messages.keys():
             
+            # Decode the frame data and extract signal values
             db_msg_object = db.decode_message(frame_id,frame_data)
             
             if first_frame:
+                # Pin the time_stamp of any first msg from message_slot
                 sig_values['Time'] = time_stamp
                 output.insert(index,{})
                 first_frame = False
 
+            # Build a dict with {'signal name' : 'value'}
             temp_dict = {sig : db_msg_object[sig] for sig in g_can_signals[g_can_messages[frame_id]]}
             sig_values.update(temp_dict)
 
 
             if frame_id in message_slot:
+                #Remove ref to this msg from message_slot
                 message_slot.remove(frame_id)
                 output[index].update(sig_values)
 
