@@ -1,0 +1,16 @@
+version: 2.1
+
+dbc: "Sample.dbc"
+trace: "Sample.trc"
+Message: 
+    - 'Msg1':
+        signals:
+            - 'Sig1'
+            - 'Sig2'
+            - 'Sig3'
+
+    - 'Msg2':
+        signals:
+          - 'Sig4'
+          - 'Sig5'
+    

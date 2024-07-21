@@ -1,7 +1,23 @@
-#This script will take dbc file and decode can messages
-#Required Modules
-#pip3 install pyyaml
-#pip3 install cantools
+#!/usr/bin/env python3
+#
+# Description :-
+# This script will decode CAN frames from CANTrc file using a CAN-DBC file and generates a CSV report
+#
+# Usage Notes :-
+# Update the configurations.yml file in $(CWD)/input/configurations.yml
+# Mention the filenames of dbc and cantrc file. They should be present in input dir
+# List the messages and its corresponding signals. Only these items will be decoded.
+# Output will be generated as a csv file
+#
+# Recommended Python version :-
+# python3 > 3.10
+#
+# Required Modules
+# pip3 install pyyaml
+# pip3 install cantools
+#
+# repository: https://github.com/ariyansanthosh/decode_can_trace/
+# author: ariyansanthosh
 
 import cantools
 import os
@@ -174,11 +190,12 @@ if __name__ == "__main__":
 
 
             if frame_id in message_slot:
-                #Remove ref to this msg from message_slot
+                # Remove ref to this msg from message_slot
                 message_slot.remove(frame_id)
-                output[index].update(sig_values)
+                output[index].update(sig_values)  # Update the signal,val pair to output 
 
                 if len(message_slot) == 0:
+                    # Restore message_slot if all ref are removed.
                     message_slot = list(g_can_messages.keys())
                     first_frame = True
                     index += 1
